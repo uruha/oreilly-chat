@@ -1,8 +1,46 @@
 <html>
     <head>
         <title>Go chat</title>
+        <style>
+            input {  display: block;}
+            ul { list-style: none; }
+        </style>
     </head>
     <body>
-        Let's chat !!!
+        <h1>websocket chat</h1>
+        <ul id="messages"></ul>
+        <form id="chatbox">
+            <textarea cols="30" rows="10"></textarea>
+            <input type="submit" value="send message">
+        </form>
+        <script>
+            let socket = {};
+            const msgbox = document.querySelector('#chatbox textarea');
+            const messages = document.getElementById('messages');
+            const chatbox = document.getElementById('chatbox');
+            if(!window['WebSocket']) {
+                alert('No correspondence for websocket.');
+            } else {
+                socket = new WebSocket('ws://localhost:8080/room');
+                socket.onclose = function() { alert('Finished connection.') };
+                socket.onmessage = (e) => {
+                    const beforeLi = messages.firstChild;
+                    const li = document.createElement('li');
+                    li.appendChild(document.createTextNode(e.data));
+                    messages.insertBefore(li, beforeLi);
+                }
+            }
+            chatbox.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (!msgbox.value) return false;
+                if (!socket) {
+                    alert('No connection for websocket.');
+                    return false;
+                }
+                socket.send(msgbox.value);
+                msgbox.value = '';
+                return false;
+            }, false);
+        </script>
     </body>
 </html>
