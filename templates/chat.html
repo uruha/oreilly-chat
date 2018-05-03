@@ -25,9 +25,11 @@
                 socket = new WebSocket('ws://{{.Host}}/room');
                 socket.onclose = function() { alert('Finished connection.') };
                 socket.onmessage = (e) => {
+                    const msg = JSON.parse(e.data);
+                    console.log(msg);
                     const beforeLi = messages.firstChild;
                     const li = document.createElement('li');
-                    li.appendChild(document.createTextNode(e.data));
+                    li.appendChild(document.createTextNode(`${msg.Name}: ${msg.Message}`));
                     messages.insertBefore(li, beforeLi);
                 }
             }
@@ -38,7 +40,7 @@
                     alert('No connection for websocket.');
                     return false;
                 }
-                socket.send(msgbox.value);
+                socket.send(JSON.stringify({ "Message": msgbox.value }));
                 msgbox.value = '';
                 return false;
             }, false);
