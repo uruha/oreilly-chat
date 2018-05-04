@@ -34,7 +34,7 @@ func (t *templateHander) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	var addr = flag.String("addr", ":8080", "address of application")
+	var addr = flag.String("addr", ":3308", "address of application")
 	flag.Parse()
 	gomniauth.SetSecurityKey("gochat")
 	gomniauth.WithProviders(

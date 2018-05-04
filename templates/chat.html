@@ -5,6 +5,7 @@
             input {  display: block;}
             ul { list-style: none; }
         </style>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
     </head>
     <body>
         <h1>websocket chat</h1>
@@ -26,13 +27,19 @@
                 socket.onclose = function() { alert('Finished connection.') };
                 socket.onmessage = (e) => {
                     const msg = JSON.parse(e.data);
+                    console.log(msg); // for debug
                     const beforeLi = messages.firstChild;
                     const li = document.createElement('li');
                     const parseISOtoDateType = /^(?<date>(\d{4})-(\d{2})-(\d{2}))T(?<time>(\d{2}):(\d{2}):(\d{2}))/;
                     const result = parseISOtoDateType.exec(msg.When);
                     li.innerHTML = `
-                        <span>${result.groups.date}: ${result.groups.time}</span><br>
-                        <span>${msg.Name}:</span><span>${msg.Message}</span>
+                    <div class="card d-flex flex-row">
+                        <img class="card-img-top p-2 col" src="${msg.AvatarURL}">
+                        <div class="card-body col">
+                            <h5 class="datetime">${result.groups.date}: ${result.groups.time} ${msg.Name}</h5>
+                            <p class="tecard-textxt">${msg.Message}</p>
+                        </div>
+                    </div>
                     `;
                     messages.insertBefore(li, beforeLi);
                 }
